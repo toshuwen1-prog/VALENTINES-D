@@ -3,105 +3,132 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>💘 Valentine?</title>
+  <title>Valentine?</title>
   <style>
     :root{
-      --bg1:#ffe6ef;
-      --bg2:#fff7fb;
-      --card:#ffffffcc;
-      --text:#2b2b2b;
-      --yes:#22c55e;
-      --no:#ef4444;
-      --shadow: 0 12px 30px rgba(0,0,0,.12);
+      --box-bg: rgba(255,255,255,.78);
+      --box-border: rgba(255,255,255,.55);
+      --text: #111;
+      --shadow: 0 18px 60px rgba(0,0,0,.25);
     }
-    *{box-sizing:border-box}
+
+    *{ box-sizing:border-box; }
+
     body{
       margin:0;
       min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: radial-gradient(1200px 800px at 20% 10%, var(--bg2), transparent),
-                  radial-gradient(1000px 700px at 90% 20%, #ffd1e1, transparent),
-                  linear-gradient(135deg,var(--bg1),#fff);
-      color:var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      padding: 18px;
-    }
-    .card{
-      width:min(560px, 100%);
-      background: var(--card);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,.65);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 22px 18px 18px;
-      text-align:center;
-      position:relative;
       overflow:hidden;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--text);
+
+      /* Background photo */
+      background:
+        linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.25)),
+        url("background.jpg") center / cover no-repeat fixed;
     }
-    .hearts{
-      position:absolute;
-      inset:-40px -40px auto auto;
-      width:180px;
-      opacity:.25;
-      transform: rotate(12deg);
-      pointer-events:none;
-      filter: saturate(1.2);
-    }
-    .gif{
-      width: 240px;
-      height: 240px;
-      margin: 6px auto 10px;
-      display:block;
-      border-radius: 18px;
-      box-shadow: 0 10px 24px rgba(0,0,0,.10);
-      background:#fff;
-      object-fit: contain;
-    }
-    h1{
-      font-size: clamp(22px, 4vw, 30px);
-      margin: 10px 0 6px;
-      letter-spacing: .2px;
-    }
-    p{
-      margin: 0 0 14px;
-      font-size: 16px;
-      opacity:.9;
-      min-height: 24px;
-    }
-    .buttons{
+
+    /* Center content */
+    .stage{
+      position:relative;
+      width:100vw;
+      height:100vh;
       display:flex;
-      gap:12px;
-      justify-content:center;
       align-items:center;
-      flex-wrap:wrap;
-      margin-top: 8px;
+      justify-content:center;
+      padding: 24px;
     }
-    button{
-      border:0;
-      border-radius: 999px;
-      padding: 12px 18px;
-      font-size: 16px;
-      font-weight: 700;
+
+    .content{
+      width:min(820px, 92vw);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:16px;
+      text-align:center;
+    }
+
+    .panel{
+      width:100%;
+      background: var(--box-bg);
+      border: 1px solid var(--box-border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 18px 18px 16px;
+      backdrop-filter: blur(6px);
+    }
+
+    h1{
+      margin:0 0 6px;
+      font-size: clamp(28px, 4.5vw, 44px);
+      letter-spacing:.2px;
+    }
+
+    #subtitle{
+      margin:0;
+      font-size: clamp(16px, 2.2vw, 20px);
+      opacity:.9;
+      min-height: 1.6em;
+    }
+
+    .gif{
+      width: min(260px, 70vw);
+      height:auto;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      background: rgba(255,255,255,.7);
+      padding: 10px;
+    }
+
+    /* Box buttons (no green/red bubbles) */
+    .btn{
+      border: 1px solid rgba(0,0,0,.12);
+      background: rgba(255,255,255,.92);
+      color:#111;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 10px 20px rgba(0,0,0,.18);
       cursor:pointer;
-      transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
-      box-shadow: 0 10px 18px rgba(0,0,0,.12);
       user-select:none;
+      transition: transform .12s ease, box-shadow .12s ease;
     }
-    button:active{ transform: translateY(1px) scale(.99); }
-    .yes{
-      background: linear-gradient(135deg, #2ee66c, var(--yes));
-      color:white;
+    .btn:active{ transform: translateY(1px); }
+
+    /* YES starts centered in the panel */
+    #yesBtn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 16px 22px;
+      font-size: 20px;
+      transform-origin: center;
+      will-change: transform, width, height;
     }
-    .no{
-      background: linear-gradient(135deg, #ff6b6b, var(--no));
-      color:white;
+
+    /* NO is free-moving on the page */
+    #noBtn{
+      position:absolute;
+      left: 60%;
+      top: 70%;
+      z-index: 5;
+      white-space:nowrap;
     }
-    .footer{
-      margin-top: 14px;
-      font-size: 12px;
-      opacity:.6;
+
+    /* When YES takes over */
+    #yesBtn.takeover{
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+      font-size: clamp(34px, 6vw, 70px);
+      box-shadow: none;
+      border: none;
+      background: rgba(255,255,255,.95);
+      z-index: 9999;
+      transform: none !important;
     }
 
     /* Celebration overlay */
@@ -111,180 +138,165 @@
       display:none;
       align-items:center;
       justify-content:center;
-      background: rgba(0,0,0,.35);
-      padding: 18px;
+      background: rgba(0,0,0,.45);
+      padding: 24px;
+      z-index: 10000;
     }
     .modal{
-      width:min(520px, 100%);
-      background:white;
-      border-radius: 22px;
-      padding: 22px 18px;
+      width:min(680px, 92vw);
+      background: rgba(255,255,255,.95);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
       text-align:center;
-      box-shadow: 0 18px 50px rgba(0,0,0,.25);
-      position:relative;
-      overflow:hidden;
     }
     .modal h2{
-      margin: 0 0 6px;
-      font-size: clamp(22px, 4vw, 30px);
+      margin: 0 0 8px;
+      font-size: clamp(26px, 4.5vw, 44px);
     }
     .modal p{
       margin: 0 0 14px;
-      font-size: 16px;
-    }
-    .close{
-      background:#111827;
-      color:#fff;
-      box-shadow:none;
-      padding: 10px 14px;
+      font-size: 18px;
     }
 
-    /* confetti bits */
+    /* Confetti */
     .confetti{
-      position:absolute;
-      width:10px;
-      height:14px;
+      position:fixed;
       top:-20px;
       left:50%;
-      opacity:.9;
+      width:10px;
+      height:14px;
       border-radius:2px;
+      opacity:.95;
       animation: fall linear forwards;
+      z-index: 10001;
+      pointer-events:none;
     }
     @keyframes fall{
       to{
         transform: translate(var(--dx), 110vh) rotate(var(--rot));
-        opacity:1;
       }
     }
   </style>
 </head>
+
 <body>
-  <div class="card">
-    <svg class="hearts" viewBox="0 0 200 200" aria-hidden="true">
-      <path fill="#ff4d7d" d="M100 172s-58-33-78-70C5 73 23 42 53 42c18 0 31 10 37 22 6-12 19-22 37-22 30 0 48 31 31 60-20 37-78 70-78 70z"/>
-      <path fill="#ff8fb1" d="M154 32c10 0 18 8 18 18s-8 18-18 18-18-8-18-18 8-18 18-18z"/>
-      <path fill="#ff8fb1" d="M40 130c8 0 14 6 14 14s-6 14-14 14-14-6-14-14 6-14 14-14z"/>
-    </svg>
+  <div class="stage" id="stage">
+    <div class="content">
+      <div class="panel">
+        <h1>Will you be my Valentine?</h1>
+        <p id="subtitle">be nice pls</p>
+      </div>
 
-    <!-- Your GIF: keep this file next to valentine.html OR replace src with a hosted link -->
-    <img class="gif" src="milk-mocha-bear.gif" alt="cute valentine gif" />
+      <img class="gif" src="milk-mocha-bear.gif" alt="cute gif" />
 
-    <h1 id="title">Will you be my Valentine? 💘</h1>
-    <p id="subtitle">No pressure… but also yes pressure 🥺</p>
-
-    <div class="buttons">
-      <button id="yesBtn" class="yes">YES 💞</button>
-      <button id="noBtn" class="no">NO 🙈</button>
+      <button id="yesBtn" class="btn">YES 💞</button>
     </div>
 
-    <div class="footer" id="counter"></div>
+    <button id="noBtn" class="btn">NO 🙈</button>
   </div>
 
-  <div class="overlay" id="overlay" role="dialog" aria-modal="true">
-    <div class="modal" id="modal">
-      <h2>YAYYYYY!!! 💖</h2>
-      <p>You just made me the happiest human alive.</p>
-      <button class="close" id="closeBtn">OKAY 😤💘</button>
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h2>OKAYYYYYYYY 💖</h2>
+      <p>locked in. you’re my valentine. no takebacks.</p>
+      <button id="closeBtn" class="btn">OK 😤💘</button>
     </div>
   </div>
 
   <script>
     const yesBtn = document.getElementById("yesBtn");
-    const noBtn  = document.getElementById("noBtn");
+    const noBtn = document.getElementById("noBtn");
     const subtitle = document.getElementById("subtitle");
-    const counter = document.getElementById("counter");
     const overlay = document.getElementById("overlay");
     const closeBtn = document.getElementById("closeBtn");
-    const modal = document.getElementById("modal");
+    const stage = document.getElementById("stage");
 
     let noCount = 0;
 
     const prompts = [
-      "Are you sure? 🥺",
-      "Like… *really* sure? 😭",
-      "Wait wait wait—think about it again 👀",
-      "I will be very sad (tiny sad) 😔",
-      "I made this whole webpage though… 😩",
-      "Please? Pretty please? 🥹",
-      "What if I ask nicely: will you reconsider? 💗",
-      "I’ll owe you dessert for a month 🍰",
-      "Okay but you + me = iconic 💘",
-      "Last chance before the YES button becomes unstoppable 😤",
-      "Are you *absolutely* sure sure sure? 😵‍💫",
-      "I’m gonna pretend you misclicked 🙃",
-      "I’m not above begging (respectfully) 🧎‍♂️",
-      "If you click NO again, the universe will judge you 🌌",
-      "This is getting suspicious… are you teasing me? 😳"
+      "please pookie",
+      "i tried rly hard to make this tho",
+      "im gonna cry if u click no again",
+      "wow so just say you dont love me anymore",
+      "be so fr right now",
+      "okayyyyy but imagine us being cute on valentines",
+      "i am literally begging (respectfully)",
+      "dont do this to me 😭",
+      "pookie pleaseeee",
+      "ok last time before i combust"
     ];
 
-    function setCounter() {
-      counter.textContent = noCount === 0 ? "" : `No clicked: ${noCount} time${noCount === 1 ? "" : "s"} 😅`;
-    }
-
-    function growYesButton() {
-      // Smoothly scale up the YES button each "No"
-      const base = 1;
-      const scale = Math.min(1 + noCount * 0.18, 3.2); // cap it so it doesn't get ridiculous
+    // Bigger growth per NO
+    function growYes() {
+      // aggressive scale; quickly reaches takeover
+      const scale = 1 + noCount * 0.45;   // was small before; now huge
       yesBtn.style.transform = `scale(${scale})`;
-      yesBtn.style.filter = `brightness(${1 + Math.min(noCount * 0.06, 0.35)})`;
+
+      // when big enough, make it fill the whole page
+      if (scale >= 3.6) {
+        yesBtn.classList.add("takeover");
+        // hide no so it can't be clicked behind
+        noBtn.style.display = "none";
+        subtitle.textContent = "ok you have to say yes now.";
+      }
     }
 
-    function maybeMoveNoButton() {
-      // Optional playful wobble after a few Nos
-      if (noCount >= 3) {
-        const dx = (Math.random() * 12 - 6).toFixed(1);
-        const dy = (Math.random() * 10 - 5).toFixed(1);
-        noBtn.style.transform = `translate(${dx}px, ${dy}px)`;
+    // Move NO to random spot on the page (keeping it fully visible)
+    function moveNoRandom() {
+      const pad = 12;
+      const rect = noBtn.getBoundingClientRect();
+      const maxX = window.innerWidth - rect.width - pad;
+      const maxY = window.innerHeight - rect.height - pad;
+
+      const x = Math.max(pad, Math.floor(Math.random() * maxX));
+      const y = Math.max(pad, Math.floor(Math.random() * maxY));
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top  = y + "px";
+    }
+
+    function spawnConfetti() {
+      const pieces = 90;
+      for (let i = 0; i < pieces; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = (Math.random() * 100) + "vw";
+        c.style.background = `hsl(${Math.random() * 360}, 90%, 65%)`;
+        c.style.animationDuration = (1.6 + Math.random() * 1.8) + "s";
+        c.style.setProperty("--dx", (Math.random() * 260 - 130) + "px");
+        c.style.setProperty("--rot", (Math.random() * 720 - 360) + "deg");
+        document.body.appendChild(c);
+        c.addEventListener("animationend", () => c.remove());
       }
     }
 
     noBtn.addEventListener("click", () => {
       noCount++;
+
       subtitle.textContent = prompts[(noCount - 1) % prompts.length];
-      setCounter();
-      growYesButton();
-      maybeMoveNoButton();
 
-      // Also shrink NO a touch so YES "wins"
-      const noScale = Math.max(1 - noCount * 0.03, 0.78);
-      noBtn.style.transform += ` scale(${noScale})`;
+      growYes();
+      moveNoRandom();
     });
-
-    function spawnConfetti() {
-      const pieces = 80;
-      for (let i = 0; i < pieces; i++) {
-        const c = document.createElement("div");
-        c.className = "confetti";
-        c.style.left = Math.random() * 100 + "vw";
-        c.style.animationDuration = (1.8 + Math.random() * 1.7) + "s";
-        c.style.background = `hsl(${Math.random() * 360}, 90%, 65%)`;
-        c.style.setProperty("--dx", (Math.random() * 220 - 110) + "px");
-        c.style.setProperty("--rot", (Math.random() * 720 - 360) + "deg");
-        document.body.appendChild(c);
-
-        c.addEventListener("animationend", () => c.remove());
-      }
-    }
 
     yesBtn.addEventListener("click", () => {
       overlay.style.display = "flex";
       spawnConfetti();
-      subtitle.textContent = "Correct answer 😌💖";
-      noBtn.disabled = true;
+
+      // lock interaction
       yesBtn.disabled = true;
-      noBtn.style.filter = "grayscale(1)";
-      yesBtn.style.transform = "scale(1.25)";
+      noBtn.disabled = true;
+      noBtn.style.display = "none";
     });
 
     closeBtn.addEventListener("click", () => {
       overlay.style.display = "none";
     });
 
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) overlay.style.display = "none";
-    });
-
-    setCounter();
+    // Place NO randomly once on load so it's playful immediately
+    window.addEventListener("load", () => moveNoRandom());
+    window.addEventListener("resize", () => moveNoRandom());
   </script>
 </body>
 </html>
