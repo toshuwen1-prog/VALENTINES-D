@@ -6,10 +6,9 @@
   <title>Valentine?</title>
   <style>
     :root{
-      --box-bg: rgba(255,255,255,.78);
-      --box-border: rgba(255,255,255,.55);
       --text: #111;
       --shadow: 0 18px 60px rgba(0,0,0,.25);
+      --btn-bg: rgba(255,255,255,.92);
     }
 
     *{ box-sizing:border-box; }
@@ -23,11 +22,10 @@
 
       /* Background photo */
       background:
-        linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.25)),
+        linear-gradient(rgba(0,0,0,.28), rgba(0,0,0,.28)),
         url("background.jpg") center / cover no-repeat fixed;
     }
 
-    /* Center content */
     .stage{
       position:relative;
       width:100vw;
@@ -43,18 +41,16 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:16px;
+      gap:14px;
       text-align:center;
     }
 
-    .panel{
+    /* No box around text, but keep it readable */
+    .headline{
       width:100%;
-      background: var(--box-bg);
-      border: 1px solid var(--box-border);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      padding: 18px 18px 16px;
-      backdrop-filter: blur(6px);
+      padding: 6px 8px;
+      text-shadow: 0 8px 24px rgba(0,0,0,.35);
+      color: rgba(255,255,255,.95);
     }
 
     h1{
@@ -66,23 +62,36 @@
     #subtitle{
       margin:0;
       font-size: clamp(16px, 2.2vw, 20px);
-      opacity:.9;
+      opacity:.95;
       min-height: 1.6em;
     }
 
+    /* No border/padding/background around gif */
     .gif{
       width: min(260px, 70vw);
       height:auto;
       border-radius: 16px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.25);
-      background: rgba(255,255,255,.7);
-      padding: 10px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.28);
+      background: transparent;
+      padding: 0;
+      border: 0;
+      outline: 0;
+      display:block;
     }
 
-    /* Box buttons (no green/red bubbles) */
+    .buttons{
+      position:relative;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 6px;
+    }
+
     .btn{
-      border: 1px solid rgba(0,0,0,.12);
-      background: rgba(255,255,255,.92);
+      border: 0;
+      background: var(--btn-bg);
       color:#111;
       border-radius: 14px;
       padding: 14px 18px;
@@ -95,7 +104,6 @@
     }
     .btn:active{ transform: translateY(1px); }
 
-    /* YES starts centered in the panel */
     #yesBtn{
       display:inline-flex;
       align-items:center;
@@ -107,13 +115,15 @@
       will-change: transform, width, height;
     }
 
-    /* NO is free-moving on the page */
+    /* NO starts beside YES, then becomes free-moving after first click */
     #noBtn{
-      position:absolute;
-      left: 60%;
-      top: 70%;
-      z-index: 5;
+      position: static;
       white-space:nowrap;
+      z-index: 5;
+    }
+
+    #noBtn.floating{
+      position:absolute;
     }
 
     /* When YES takes over */
@@ -131,7 +141,7 @@
       transform: none !important;
     }
 
-    /* Celebration overlay */
+    /* Celebration overlay (no confetti) */
     .overlay{
       position:fixed;
       inset:0;
@@ -153,29 +163,12 @@
     .modal h2{
       margin: 0 0 8px;
       font-size: clamp(26px, 4.5vw, 44px);
+      color:#111;
     }
     .modal p{
       margin: 0 0 14px;
       font-size: 18px;
-    }
-
-    /* Confetti */
-    .confetti{
-      position:fixed;
-      top:-20px;
-      left:50%;
-      width:10px;
-      height:14px;
-      border-radius:2px;
-      opacity:.95;
-      animation: fall linear forwards;
-      z-index: 10001;
-      pointer-events:none;
-    }
-    @keyframes fall{
-      to{
-        transform: translate(var(--dx), 110vh) rotate(var(--rot));
-      }
+      color:#111;
     }
   </style>
 </head>
@@ -183,24 +176,25 @@
 <body>
   <div class="stage" id="stage">
     <div class="content">
-      <div class="panel">
+      <div class="headline">
         <h1>Will you be my Valentine?</h1>
         <p id="subtitle">be nice pls</p>
       </div>
 
       <img class="gif" src="milk-mocha-bear.gif" alt="cute gif" />
 
-      <button id="yesBtn" class="btn">YES 💞</button>
+      <div class="buttons" id="buttons">
+        <button id="yesBtn" class="btn">YES</button>
+        <button id="noBtn" class="btn">NO</button>
+      </div>
     </div>
-
-    <button id="noBtn" class="btn">NO 🙈</button>
   </div>
 
   <div class="overlay" id="overlay">
     <div class="modal">
-      <h2>OKAYYYYYYYY 💖</h2>
+      <h2>OKAYYYYYYYY</h2>
       <p>locked in. you’re my valentine. no takebacks.</p>
-      <button id="closeBtn" class="btn">OK 😤💘</button>
+      <button id="closeBtn" class="btn">OK</button>
     </div>
   </div>
 
@@ -211,6 +205,7 @@
     const overlay = document.getElementById("overlay");
     const closeBtn = document.getElementById("closeBtn");
     const stage = document.getElementById("stage");
+    const buttons = document.getElementById("buttons");
 
     let noCount = 0;
 
@@ -221,28 +216,23 @@
       "wow so just say you dont love me anymore",
       "be so fr right now",
       "okayyyyy but imagine us being cute on valentines",
-      "i am literally begging (respectfully)",
-      "dont do this to me 😭",
+      "i am literally begging respectfully",
+      "dont do this to me",
       "pookie pleaseeee",
       "ok last time before i combust"
     ];
 
-    // Bigger growth per NO
     function growYes() {
-      // aggressive scale; quickly reaches takeover
-      const scale = 1 + noCount * 0.45;   // was small before; now huge
+      const scale = 1 + noCount * 0.55;   // bigger growth
       yesBtn.style.transform = `scale(${scale})`;
 
-      // when big enough, make it fill the whole page
-      if (scale >= 3.6) {
+      if (scale >= 3.8) {
         yesBtn.classList.add("takeover");
-        // hide no so it can't be clicked behind
         noBtn.style.display = "none";
         subtitle.textContent = "ok you have to say yes now.";
       }
     }
 
-    // Move NO to random spot on the page (keeping it fully visible)
     function moveNoRandom() {
       const pad = 12;
       const rect = noBtn.getBoundingClientRect();
@@ -256,35 +246,25 @@
       noBtn.style.top  = y + "px";
     }
 
-    function spawnConfetti() {
-      const pieces = 90;
-      for (let i = 0; i < pieces; i++) {
-        const c = document.createElement("div");
-        c.className = "confetti";
-        c.style.left = (Math.random() * 100) + "vw";
-        c.style.background = `hsl(${Math.random() * 360}, 90%, 65%)`;
-        c.style.animationDuration = (1.6 + Math.random() * 1.8) + "s";
-        c.style.setProperty("--dx", (Math.random() * 260 - 130) + "px");
-        c.style.setProperty("--rot", (Math.random() * 720 - 360) + "deg");
-        document.body.appendChild(c);
-        c.addEventListener("animationend", () => c.remove());
-      }
-    }
-
     noBtn.addEventListener("click", () => {
       noCount++;
-
       subtitle.textContent = prompts[(noCount - 1) % prompts.length];
 
+      // After first NO, it becomes a floating button that can move anywhere
+      if (!noBtn.classList.contains("floating")) {
+        noBtn.classList.add("floating");
+        stage.appendChild(noBtn); // move it out of the button row into the stage
+        moveNoRandom();
+      } else {
+        moveNoRandom();
+      }
+
       growYes();
-      moveNoRandom();
     });
 
     yesBtn.addEventListener("click", () => {
       overlay.style.display = "flex";
-      spawnConfetti();
 
-      // lock interaction
       yesBtn.disabled = true;
       noBtn.disabled = true;
       noBtn.style.display = "none";
@@ -294,9 +274,11 @@
       overlay.style.display = "none";
     });
 
-    // Place NO randomly once on load so it's playful immediately
-    window.addEventListener("load", () => moveNoRandom());
-    window.addEventListener("resize", () => moveNoRandom());
+    window.addEventListener("resize", () => {
+      if (noBtn.classList.contains("floating") && noBtn.style.display !== "none") {
+        moveNoRandom();
+      }
+    });
   </script>
 </body>
 </html>
